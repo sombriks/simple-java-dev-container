@@ -16,7 +16,7 @@ Then check the image name with `podman images`
 Using the correct image name, create a container from it:
 
 ```bash
- podman run -it -v .:/app:z -p 8080:8080 --name simple-java-dev dad314ea5038
+ podman run -it -v ${PWD}:/app:z -p 8080:8080 --name simple-java-dev dad314ea5038
 ```
 
 Pay attention to use the
@@ -27,3 +27,12 @@ Remember the general rule for volumes and ports: you define what to share on
 Dockerfile, but only when creating/running is possible to define the bindings
 for them. This is why more sophisticated things
 like [docker-compose](https://docs.docker.com/compose/compose-file/) exists.
+
+## Caveats
+
+When using docker instead of podman, the `-v .:/app:z` must be replaced
+by `-v ${PWD}:/app:z`. Since it works for podman too, it's easier to keep the
+second one as the default volume mount option.
+
+Mac m1 machines have trouble if the base image does not offer a m1-enabled
+image, and it will fail to build a usable image container.
