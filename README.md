@@ -8,7 +8,7 @@ environment with no special permissions.
 First build the image
 
 ```bash
-podman build .
+podman build -t simple-java-dev-image:latest . 
 ```
 
 Then check the image name with `podman images`
@@ -16,16 +16,17 @@ Then check the image name with `podman images`
 Using the correct image name, create a container from it:
 
 ```bash
-podman run -it -v ${PWD}:/app:z -p 8080:8080 --name simple-java-dev dad314ea5038
+podman run -it -v ${PWD}:/app:z -p 8080:8080 --name simple-java-dev simple-java-dev-image
 ```
 
 If using windows with PowerShell try this:
 
 ```PowerShell
-docker run -it -v ${pwd.Path}:/app:z -p 8080:8080 --name simple-java-dev 06692269a755
+docker run -it -v ${pwd.Path}:/app:z -p 8080:8080 --name simple-java-dev simple-java-dev-image
 ```
 
-**TODO**: it won't work due to a odd issue with line terminators. Working on a future possible solution.
+**TODO**: it won't work due to a odd issue with line terminators. Working on a
+future possible solution.
 
 Pay attention to use the
 correct [selinux label](https://docs.docker.com/storage/bind-mounts/#configure-the-selinux-label)
