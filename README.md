@@ -1,6 +1,6 @@
 # Simple java dev container
 
-Dead simple podman/docker image to have a full-featured java development
+_Dead simple_ podman/docker image to have a full-featured java development
 environment with no special permissions.
 
 ## How to run this
@@ -25,17 +25,8 @@ If using windows with PowerShell try this:
 docker run -it -v ${pwd.Path}:/app:z -p 8080:8080 --name simple-java-dev simple-java-dev-image
 ```
 
-**TODO**: it won't work due to a odd issue with line terminators. Working on a
-future possible solution.
-
-Pay attention to use the
-correct [selinux label](https://docs.docker.com/storage/bind-mounts/#configure-the-selinux-label)
-so your container can share data with host machine.
-
-Remember the general rule for volumes and ports: you define what to share on
-Dockerfile, but only when creating/running is possible to define the bindings
-for them. This is why more sophisticated things
-like [docker-compose](https://docs.docker.com/compose/compose-file/) exists.
+**TODO**: it's not working due to an odd issue with line terminators. Working on
+a possible solution.
 
 ## Caveats
 
@@ -46,7 +37,17 @@ second one as the default volume mount option.
 Mac m1 machines have trouble if the base image does not offer a m1-enabled
 image, and it will fail to build a usable image container.
 
-Volumes doesn't merge content, they override.
+Volumes doesn't merge content, they override. This image has a hacky way to
+'initialize' the application folder when a container gets created.
+
+Pay attention to use the
+correct [selinux label](https://docs.docker.com/storage/bind-mounts/#configure-the-selinux-label)
+so your container can share data with host machine.
+
+Remember the general rule for volumes and ports: you define what to share on
+Dockerfile, but only when creating/running is possible to define the bindings
+for them. This is why more sophisticated things
+like [docker-compose](https://docs.docker.com/compose/compose-file/) exists.
 
 ## Publishing
 
@@ -80,3 +81,36 @@ Storing signatures
 Now your image is available over the internet, no need to rebuild it. Very
 useful when this one image should be used along others with a docker-compose.yml
 file.
+
+## Sample docker-compose.yml
+
+```yml
+# 
+# docker-compose file to spin up a java development environment out of thin air
+#
+version: '3'
+services:
+  app:
+    image: sombriks/simple-java-dev-image
+    volumes:
+      - ./app:/app:z
+    ports:
+      - 8080:8080
+    links:
+      - db
+    depends_on:
+      - db
+    environment:
+      - DB_URL=jdbc:postgresql://db/simple_java_dev_starter
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+  db:
+    image: postgres
+    volumes:
+      - .data:/var/lib/postgresql/data:z
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=simple_java_dev_starter
+```
