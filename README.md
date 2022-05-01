@@ -45,3 +45,36 @@ second one as the default volume mount option.
 
 Mac m1 machines have trouble if the base image does not offer a m1-enabled
 image, and it will fail to build a usable image container.
+
+## Publishing
+
+One lone container isn't that useful, so publish it might make the difference.
+
+In order to proper publish, start by tagging it correctly:
+
+```bash
+podman build -t docker.io/<your docker hub username>/simple-java-dev-image:v1 . 
+```
+
+Then login into the registry and push the image:
+
+```bash
+$ podman login docker.io
+Username: <your docker hub username>
+Password: 
+Login Succeeded!
+[sombriks@ignis simple-java-dev-container]$ podman push <your docker hub username>/simple-java-dev-image
+Getting image source signatures
+Copying blob db5b424264fd done  
+Copying blob da55b45d310b skipped: already exists  
+Copying blob c7a419b33b89 skipped: already exists  
+Copying blob 5bc4bcca545a skipped: already exists  
+Copying blob 14fbd8039ba4 skipped: already exists  
+Copying config 2c6c9a3ef6 done  
+Writing manifest to image destination
+Storing signatures
+```
+
+Now your image is available over the internet, no need to rebuild it. Very
+useful when this one image should be used along others with a docker-compose.yml
+file.
