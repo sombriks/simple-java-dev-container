@@ -46,6 +46,8 @@ second one as the default volume mount option.
 Mac m1 machines have trouble if the base image does not offer a m1-enabled
 image, and it will fail to build a usable image container.
 
+Volumes doesn't merge content, they override.
+
 ## Publishing
 
 One lone container isn't that useful, so publish it might make the difference.
