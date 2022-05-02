@@ -1,0 +1,6 @@
+.idea
+target
+coverage
+*.dmp
+javacore.*
+*.core 
